@@ -8,12 +8,18 @@ def samples_info():
         print v
     print "*"*30
 
+
+current_playing = None
+
 try :
     import RPi.GPIO as GPIO
     GPIO.setmode(GPIO.BCM)
 
     def pushButton(channel):
+        if current_playing:
+            samples[current_playing].pause_unpause()
         samples[gpio_key_assoc[str(channel)]].pause_unpause()
+        current_playing = str(channel)
         samples_info()
 
     for gpio, key in gpio_key_assoc.iteritems():
@@ -25,6 +31,9 @@ except:
 while True:
     key = getkey()
     if key in samples:
+        if current_playing:
+            samples[current_playing].pause_unpause()
         samples[key].pause_unpause()
+        current_playing = key
         samples_info()
     time.sleep(0.5)
