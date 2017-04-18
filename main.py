@@ -1,39 +1,32 @@
 #!/usr/bin/env python
-from utils import *
-from settings import *
-import time
+from sequence import Sequence
+from settings import sequences
+import time, pygame
 
-def samples_info():
-    for v in samples.values():
-        print v
-    print "*"*30
+pygame.display.set_mode([200, 100])
 
+current_sequence = None
 
-current_playing = None
-
-try :
-    import RPi.GPIO as GPIO
-    GPIO.setmode(GPIO.BCM)
-
-    def pushButton(channel):
-        if current_playing:
-            samples[current_playing].pause_unpause()
-        samples[gpio_key_assoc[str(channel)]].pause_unpause()
-        current_playing = str(channel)
-        samples_info()
-
-    for gpio, key in gpio_key_assoc.iteritems():
-        GPIO.setup(int(gpio), GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(int(gpio), GPIO.FALLING, callback=pushButton, bouncetime=200)
-except:
-    print "Not executed on raspberry"
+for seq in sequences.itervalues():
+    seq.start()
 
 while True:
-    key = getkey()
-    if key in samples:
-        if current_playing:
-            samples[current_playing].pause_unpause()
-        samples[key].pause_unpause()
-        current_playing = key
-        samples_info()
+    for event in pygame.event.get(pygame.KEYDOWN):
+        if event.key == pygame.K_ESCAPE:
+            for seq in sequences.itervalues():
+                try:
+                    seq.stop()
+                except:
+                    pass
+            exit()
+
+        if event.key in sequences:
+            current_sequence = sequences[event.key]
+            current_sequence.play()
+
+    for event in pygame.event.get(pygame.KEYUP):
+        if event.key in sequences:
+            current_sequence.pause()
+            current_sequence = None
+
     time.sleep(0.5)

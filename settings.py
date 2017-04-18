@@ -1,17 +1,33 @@
-from utils import Sample
+from sequence import Sequence
+import pygame
 
-samples = {
+seq4 = Sequence(name="Sequence 4", playlist=["./samples/jingle2.wav",
+                                             "./samples/jingle2.wav",
+                                             "./samples/jingle2.wav",
+                                             "./samples/jingle2.wav",
+                                             "./samples/jingle2.wav"],
+                                             next_sequence=None)
+seq3 = Sequence(name="Sequence 3", playlist=["./samples/jingle2.wav",
+                                             "./samples/badswap.wav",
+                                             "./samples/jingle2.wav",
+                                             "./samples/badswap.wav"],
+                                             next_sequence=seq4)
+seq2 = Sequence(name="Sequence 2", playlist=["./samples/badswap.wav",
+                                             "./samples/badswap.wav",
+                                             "./samples/match0.wav",
+                                             "./samples/badswap.wav"],
+                                             next_sequence=seq3)
+seq1 = Sequence(name="Sequence 1", playlist=["./samples/jingle_intro.wav",
+                                             "./samples/match0.wav",
+                                             "./samples/jingle2.wav",
+                                             "./samples/match1.wav",
+                                             "./samples/jingle3.wav"],
+                                             next_sequence=seq2)
+
+sequences = {
     # touche clavier : sample
-    "1" : Sample("Basse", "./bass.wav"),
-    "2" : Sample("Cloches", "./bells.wav"),
-    "3" : Sample("Clap", "./clap.wav"),
-    "4" : Sample("Guitare", "./guitar.wav"),
-}
-
-gpio_key_assoc = {
-    #pin sur le rasp : touche clavier
-    "17" : "1",
-    "18" : "2",
-    "22" : "3",
-    "27" : "4",
+    pygame.K_1 : seq1,
+    pygame.K_2 : seq2,
+    pygame.K_3 : seq3,
+    pygame.K_4 : seq4,
 }
