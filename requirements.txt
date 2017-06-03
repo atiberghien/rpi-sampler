@@ -1,3 +1,5 @@
 pygame
 pyserial
 RPi.GPIO
+pydub
+python-slugify

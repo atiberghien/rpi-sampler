@@ -7,3 +7,6 @@ pip-selfcheck.json
 pygame
 *.pyc
 old
+/settings.py.old
+/samples_old/
+/CAPACITIVE2.ino
